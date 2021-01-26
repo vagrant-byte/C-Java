@@ -1,116 +1,93 @@
 #define _CRT_SECURE_NO_WARNINGS 1 
 #include"game.h"
-//初始化棋盘 初始化为空格
-void Initboard(char board[Row][Col], int row, int col)
+void InitBoard(char board[ROWS][COLS], int rows, int cols,char ret)//初试划棋盘
 {
 	int i = 0;
 	int j = 0;
-	for (i = 0; i < row; i++)
+	for (i = 0; i <= rows; i++)
 	{
-		for (j = 0; j < col;j++)
+		for (j = 0; j <= cols; j++)
 		{
-		   board[i][j] = ' ';
+			board[i][j] = ret;
 		}
 	}
 }
-//打印棋盘
-void DisplayBoard(char board[Row][Col], int row, int col)
+void DisplayBoard(char board[ROWS][COLS], int row, int col)//打印棋盘
 {
 	int i = 0;
-	for (i = 0; i < row; i++)
+	int j = 0;
+	printf("----------------------------\n");
+	for (i = 0; i <= row; i++)//打印行号
 	{
-		int j = 0;
-		//打印数据
-		for (j = 0; j < col; j++)
+		printf("%d  ", i);
+	}
+	printf("\n");
+	for (i = 1; i <= row; i++)
+	{
+		printf("%d  ", i);//打印列号
+		for (j = 1; j <= col; j++)
 		{
-			printf(" %c ", board[i][j]);
-			if (j < col - 1)
-				printf("|");
+			printf("%c  ",board[i][j]);
 		}
 		printf("\n");
-		//打印分割行
-		if (i < row - 1)
+	}
+
+}
+void SetMine(char mine[ROWS][COLS], int row, int col, int count)//布置雷
+{
+	for (int i = 0; i <= EASY_COUNT; i++)
+	{
+		while(count)
 		{
-			for (j = 0; j < col; j++)
+			int x = rand() % row+1;//产生1-9的数字
+			int y = rand() % col+1;
+			if (mine[x][y] == '0')
 			{
-				printf("---");
-				if (j < col - 1)
-					printf("|");
+				mine[x][y] = '1';
+				count--;
 			}
-			printf("\n");
 		}
 	}
 }
-//玩家下棋
-void PlayerMove(char board[Row][Col], int row, int col)
+int GetMineCont(char mine[ROWS][COLS], int x, int y)
 {
-	int i = 0;
-	int j =0;
-	printf("玩家走：\n");
-	while (1)
+	return mine[x - 1][y] + mine[x - 1][y - 1] + mine[x][y - 1] + mine[x + 1][y - 1] + mine[x + 1][y] + mine[x + 1][y + 1] + mine[x][y + 1] + mine[x - 1][y + 1] - 8 * '0';
+}
+void FineMine(char mine[ROW][COLS], char show[ROWS][COLS], int row, int col)//排雷
+{
+	int win = 0;//判断排雷是否成功
+	while (win<row*col-EASY_COUNT)
 	{
-		printf("请输入坐标：");
-		scanf("%d %d", &i, &j);
-		if (1 <= i <= row && 1 <= j <= col)
+		printf("请输入要排查的坐标：");
+		int x = 0;
+		int y = 0;
+		scanf("%d %d", &x, &y);
+		//检验坐标合法性
+		if (x >= 1 && x <= row&&y >= 1 && y <= col)
 		{
-			if (board[i-1][j-1] != ' ')//玩家并非是程序员 是从1开始输入 而棋盘是从0开始 所以减1
+			if (mine[x][y] == '1')
 			{
-				printf("坐标被占用，请重新输入！\n");
+				printf("很遗憾，你被炸死了\n");
+				DisplayBoard(mine, row, col);
+				break;
 			}
 			else
 			{
-				board[i - 1][j - 1] = '*';
-				break;
+				int count = GetMineCont(mine, x, y);
+				show[x][y] = count+'0';//存放的是数字字符
+				DisplayBoard(show, row, col);
+				win++;
 			}
+				
 		}
 		else
 		{
-			printf("坐标非法，请重新输入！\n");
+			printf("坐标非法，请重新输入\n");
 		}
 	}
-}
-//电脑下棋
-void ComputerMove(char board[Row][Col], int row, int col)
-{
-	printf("电脑走：\n");
-	while (1)
+	if (win = row*col - EASY_COUNT)
 	{
-		int i = rand() % row;//产生0-2的随机数
-		int j = rand() % col;
-		if (board[i][j] == ' ')
-		{
-			board[i][j] = '#';
-			break;
-		}
+		printf("恭喜你，排雷成功！\n");
+		DisplayBoard(mine, row, col);
 	}
-}
-//判断输赢
-char Checkwin(char board[Row][Col], int row, int col)
-{
-	int i = 0;
-	for (i = 0; i < row; i++)//三行判断
-	{
-		if (board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0] != ' ')
-			return  board[i][0];
-	}
-	int j = 0;
-	for (j = 0; j < col; j++)//三列判断
-	{
-		if (board[0][j] == board[1][j] && board[1][j] == board[2][j] && board[0][j] != ' ')
-			return  board[0][j];
-	}
-	//对角线判断
-	if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] != ' ')
-		return board[0][0];
-	if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[0][2] != ' ')
-		return board[0][2];
-	for (i = 0; i < row; i++)
-	{
-		for (j = 0; j < col; j++)
-		{
-			if (board[i][j] == ' ')
-				return 'C';
-		}
-	}
-	return 'Q';
 }

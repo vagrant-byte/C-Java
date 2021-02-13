@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #define Row  3
 #define Col  3
 #include<stdio.h>
@@ -18,4 +19,26 @@ char Checkwin(char board[Row][Col], int row, int col);//判断输赢
 //电脑赢 #
 //玩家赢 *
 //平局  Q
+=======
+#define Row  3
+#define Col  3
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+//初始化棋盘
+void Initboard(char board[Row][Col], int row, int col);
+//打印棋盘
+void DisplayBoard(char board[Row][Col], int row, int col);
+//玩家下棋
+void PlayerMove(char board[Row][Col], int row, int col);
+//电脑下棋
+void ComputerMove(char board[Row][Col], int row, int col);
+
+char Checkwin(char board[Row][Col], int row, int col);//判断输赢
+
+
+//电脑赢 #
+//玩家赢 *
+//平局  Q
+>>>>>>> eef6d59599fe62faf34583906fb120c75478c9db
 //继续  C

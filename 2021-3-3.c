@@ -188,3 +188,27 @@
 //	printf("二进制中1的个数=%d", count);
 //	return 0;
 //}
+int main()
+{
+	int num = -1;
+	int count = 0;
+	for (int i = 0; i < 32; i++)
+	{
+		if (((num >> i) & 1) == 1)
+			count++;
+	}
+	printf("二进制中1的个数=%d", count);
+	return 0;
+}
+int main()
+{
+	int num = -1;
+	int count = 0;
+	while (num)
+	{
+		count++;
+		num = num&(num - 1);
+	}
+	printf("二进制中1的个数=%d", count);
+	return 0;
+}

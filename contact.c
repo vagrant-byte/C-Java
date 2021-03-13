@@ -1,123 +1,170 @@
 #define _CRT_SECURE_NO_WARNINGS 1 
 #include "contact.h"
-void Initcontact(struct contact* ps)//初始化通讯录
+void Initcontact(struct contact* pc)
 {
-	memset(ps->data, 0, sizeof(ps->data));
-	ps->size = 0;
-}
-void addcontact(struct contact* ps)//添加信息到通讯录
-{
-	if (ps->size == max)
-		printf("通讯录已满\n");
-	else
+	pc->sz = 0;
+	pc->capacity = DEFAULT_SZ;
+	pc->data = (struct PeoInfo*)malloc(DEFAULT_SZ*sizeof(struct PenInfo));
+	if (pc->data == NULL)
 	{
-		printf("请输入姓名:");
-		scanf("%s", ps->data[ps->size].name);
-		printf("请输入年龄:");
-		scanf("%d", &ps->data[ps->size].age);
-		printf("请输入性别:");
-		scanf("%s", ps->data[ps->size].sex);
-		printf("请输入电话:");
-		scanf("%s", ps->data[ps->size].tele);
-		printf("请输入地址:");
-		scanf("%s", ps->data[ps->size].addr);
-		ps->size++;
-		printf("添加成功\n");
+		printf("初始化失败\n");
+		exit(1);
 	}
 }
-void showcontact(const struct contact* ps)//展示通讯录
+void Addcontact(struct contact* pc)
 {
-	if (ps->size == 0)
-		printf("通讯录为空\n");
-	else
+	if (pc->sz == pc->capacity)
 	{
-		int i = 0;
-		printf("%20s\t%4s\t%5s\t%12s\t%30s\n", "名字", "年龄", "性别", "电话", "地址");
-		for (i = 0; i < ps->size; i++)
+		struct PeoInfo* ptr = (struct PeoInfo*)realloc(pc->data, sizeof(struct PenInfo)*(pc->capacity + 2));
+		if (ptr == NULL)
 		{
-			printf("%20s\t%4d\t%5s\t%12s\t%30s\n",
-				ps->data[i].name,
-				ps->data[i].age,
-				ps->data[i].sex,
-				ps->data[i].tele,
-				ps->data[i].addr
-				);
+			printf("增容失败\n");
+			return 1;
+		}
+		else
+		{
+			printf("增容成功\n");
+			pc->data = ptr;
+			pc->capacity += 2;
 		}
 	}
+	printf("请输入名字:>");
+	scanf("%s", pc->data[pc->sz].name);
+	printf("请输入年龄:>");
+	scanf("%d", &(pc->data[pc->sz].age));
+	printf("请输入性别:>");
+	scanf("%s", pc->data[pc->sz].sex);
+	printf("请输入电话:>");
+	scanf("%s", pc->data[pc->sz].tele);
+	printf("请输入地址:>");
+	scanf("%s", pc->data[pc->sz].addr);
+	pc->sz++;
+	printf("添加成功\n");
 }
-int findbyname(const struct contact* ps,char name[max_name])//查找函数找到返回地址找不到返回-1
+static int FindByName(const struct contact*pc,char name[MAX_NAME])
 {
-	int i = 0;
-	for (i = 0; i < ps->size; i++)
+	for (int i = 0; i < pc->sz; i++)
 	{
-		if (0 == strcmp(ps->data[i].name, name))
+		if (strcmp(pc->data[i].name, name) == 0)
+		{
 			return i;
+		}
 	}
 	return -1;
 }
-void delcontact(struct contact* ps)//删除通信录信息
+void Delcontact(struct contact* pc)//删除通讯录
 {
-	char name[max_name];
-	printf("请输入要删除的姓名：\n");
-	scanf("%s", &name);
-	int pos = findbyname(ps, name);
-	if (-1== pos)
-		printf("找不到要删除人信息\n");
+	char name[MAX_NAME] = { 0 };
+	if (pc->sz == 0)
+	{
+		printf("通讯录为空\n");
+	}
 	else
 	{
-		int j = 0;
-		for (j = 1; j < ps->size - 1; j++)
+		printf("请输入要删除联系人姓名：");
+		scanf("%s", &name);
+		int pos = FindByName(pc, name);
+		if (pos == -1)
 		{
-			ps->data[j]= ps->data[j + 1];
+			printf("要删除人不存在\n");
 		}
-		ps->size--;
-		printf("删除成功\n");
+		else
+		{
+			for (int j = pos; j < pc->sz - 1; j++)
+			{
+				pc->data[j] = pc->data[j + 1];
+			}
+			pc->sz--;
+			printf("删除成功\n");
+		}
 	}
 }
-void searchcontact(const struct contact* ps)//查找通讯录
+void Searchcontact(const struct contact* pc)//查找通讯录
 {
-	char name[max_name];
+	char name[MAX_NAME];
 	printf("请输入要查找的人姓名：\n");
 	scanf("%s", &name);
-	int pos = findbyname( ps, name);
+	int pos = FindByName(pc, name);
 	if (-1 == pos)
 		printf("找不到此人信息\n");
 	else
 	{
 		int i = 0;
 		printf("%20s\t%4s\t%5s\t%12s\t%30s\n", "名字", "年龄", "性别", "电话", "地址");
-		for (i = 0; i < ps->size; i++)
+		for (i = 0; i < pc->sz; i++)
 		{
 			printf("%20s\t%4d\t%5s\t%12s\t%30s\n",
-				ps->data[pos].name,
-				ps->data[pos].age,
-				ps->data[pos].sex,
-				ps->data[pos].tele,
-				ps->data[pos].addr
+				pc->data[pos].name,
+				pc->data[pos].age,
+				pc->data[pos].sex,
+				pc->data[pos].tele,
+				pc->data[pos].addr
 				);
 		}
 	}
 }
-void modifycontact(struct contact* ps)//修改通讯录中联系人
+void Modifycontact(struct contact* pc)//修改通讯录中联系人
 {
-	char name[max_name];
+	char name[MAX_NAME];
 	printf("请输入要修改的联系人姓名：\n");
 	scanf("%s", &name);
-	int pos = findbyname(ps, name);
+	int pos = FindByName(pc, name);
 	if (-1 == pos)
 		printf("找不到修改人信息\n");
 	else
 	{
 		printf("请输入姓名:");
-		scanf("%s", ps->data[pos].name);
+		scanf("%s", pc->data[pos].name);
 		printf("请输入年龄:");
-		scanf("%d", &ps->data[pos].age);
+		scanf("%d", &pc->data[pos].age);
 		printf("请输入性别:");
-		scanf("%s", ps->data[pos].sex);
+		scanf("%s", pc->data[pos].sex);
 		printf("请输入电话:");
-		scanf("%s", ps->data[pos].tele);
+		scanf("%s", pc->data[pos].tele);
 		printf("请输入地址:");
-		scanf("%s", ps->data[pos].addr);
+		scanf("%s", pc->data[pos].addr);
 		printf("修改成功\n");
 	}
+}
+void Showcontact(const struct contact* pc)//展示通讯录
+{
+	if (pc->sz == 0)
+		printf("通讯录为空\n");
+	else
+	{
+		int i = 0;
+		printf("%20s\t%4s\t%5s\t%12s\t%30s\n", "名字", "年龄", "性别", "电话", "地址");
+		for (i = 0; i < pc->sz; i++)
+		{
+			printf("%20s\t%4d\t%5s\t%12s\t%30s\n",
+				pc->data[i].name,
+				pc->data[i].age,
+				pc->data[i].sex,
+				pc->data[i].tele,
+				pc->data[i].addr
+				);
+		}
+	}
+}
+void Empcontact(struct contact* pc)//清空通讯录
+{
+	pc->sz = 0;
+	free(pc);
+}
+
+//自定义的比较函数
+int CmpByName(const void* e1, const void* e2)
+{
+	return strcmp((const char*)e1, (const char*)e2);
+}
+
+//通过名字排序通讯录中联系人的先后顺序
+void Sortcontact(struct contact* pc)
+{
+	qsort(pc->data, pc->sz, sizeof(struct PeoInfo*), CmpByName);//排序
+}
+void Destorcontact(struct contact* pc)
+{
+	free(pc->data);
+	pc->data = NULL;
 }

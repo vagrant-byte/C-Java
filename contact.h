@@ -1,38 +1,43 @@
 #define _CRT_SECURE_NO_WARNINGS 1 
 #include<stdio.h>
+#include<stdlib.h>
 #include<string.h>
-#define max 1000
-#define max_name 20
-#define max_sex 5
-#define max_tele 12
-#define max_addr 30
-
-enum option
+#define MAX_NAME 20
+#define MAX_SEX 5
+#define MAX_TELE 12
+#define MAX_ADDR 30
+#define DEFAULT_SZ 3
+enum Option
 {
-	exit,
-	add,
-	del,
-	search,
-	modify,
-	show,
-	sort
+	Exit,
+	Add,
+	Del,
+	Search,
+	Modify,
+	Show,
+	Sort,
+	Emp
 };
-struct peoinof
+struct PenInfo
 {
-	char name[max_name];
+	char name[MAX_NAME];
 	int age;
-	char sex[max_sex];
-	char tele[max_tele];
-	char addr[max_addr];
+	char sex[MAX_SEX];
+	char tele[MAX_TELE];
+	char addr[MAX_ADDR];
 };
 struct contact
 {
-	struct peoinof data[max];
-	int size;
+	struct PenInfo* data;
+	int sz;//计算存放了多少个人信息
+	int capacity;//当前通讯录最大容量
 };
-void Initcontact(struct contact* ps);//初始化通讯录
-void addcontact(struct contact* ps);//添加信息到通讯录
-void showcontact(const struct contact* ps);//展示通讯录
-void delcontact(struct contact* ps);//删除通讯录中指定信息
-void searchcontact(const struct contact* ps);//查找通讯录
-void modifycontact(struct contact* ps);//修改通讯录中联系人
+void Initcontact(struct contact* pc);//初始化通讯录
+void Addcontcat(struct contact* pc);//增加联系人信息
+void Subcontact(struct contact* pc);//删除联系人信息
+void Searchcontact(struct contact* pc);//查找联系人信息
+void Modifycontact(struct contact* pc);//修改联系人信息
+void Showcontact(struct contact* pc);//展示联系人信息
+void Sortcontact(struct contact* pc);//按姓名进行排序
+void Empcontact(struct contact* pc);
+void Destorcontact(struct contact* pc);//释放内存空间

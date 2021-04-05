@@ -1,47 +1,37 @@
 #define _CRT_SECURE_NO_WARNINGS 1 
 #include<stdio.h>
-#include<string.h>//消失的数字
-//int main()
-//{
-//	int n = 0;
-//	printf("请输入一个整数");
-//	scanf("%d", &n);
-//	int arr[5] = { 0 };
-//	for (int i = 0; i < n-1; i++)
-//	{
-//		scanf("%d", &arr[i]);
-//	}
-//	int sum = 0;
-//	for (int i = 0; i <n; i++)
-//	{
-//		sum = sum + i;
-//	}
-//	for (int i = 0; i < n-1; i++)
-//	{
-//		sum-= arr[i];
-//	}
-//	printf("%d\n", sum);
-//	return 0;
-//}
+#define N 6
 int main()
 {
-	int n = 0;
-	printf("请输入一个数字");
-	scanf("%d", &n);
-	int arr[5] = { 0 };
-	for (int i = 0; i < n - 1; i++)
+	int arr[N] = { 0 };
+	for (int i = 0; i < N; i++)
 	{
 		scanf("%d", &arr[i]);
 	}
-	int x = 0;
-	for (int i = 0; i <n; i++)
+	int ret = 0;
+	for (int i = 0; i < N; i++)
 	{
-		x ^= i;
+		ret ^= arr[i];
 	}
-	for (int i = 0; i < n - 1; i++)
+	int j = 0;
+	for (j = 0; j < 32; j++)//找第J位为1
 	{
-		x ^= arr[i];
+		if (ret>>j & 1)
+			break;
 	}
-	printf("%d\n", x);
+	int a, b = 0;
+	for (int i = 0; i < N; i++)//将原数组分为两组
+	{
+		if (arr[i]>>j & 1)
+		{
+			a ^= arr[i];
+		}
+		else
+		{
+			b ^= arr[i];
+		}
+	}
+	printf("%d\n",a);
+	printf("%d\n", b);
 	return 0;
 }

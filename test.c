@@ -19,8 +19,12 @@ int main()
 	SListPushFront(&pList, 3);
 	SListPushFront(&pList, 4);
 	SListPushFront(&pList, 5);
-	SListPopFront(&pList);
-
+	/*SListPopFront(&pList);*/
+	/*SListNode*pos = SListFind(pList, 3);
+	if (pos)
+	{
+		pos->data = 30;
+	}*/
 	SListPrint(pList);
 	return 0;
 }

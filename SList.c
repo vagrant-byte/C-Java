@@ -83,5 +83,36 @@ void SListPopFront(SListNode** pphead)//头删
 		*pphead = next;
 	}
 }
-
+SListNode* SListFind(SListNode* phead, SListDataType key)//查找修改
+{
+	
+	SListNode* cur = phead;
+	while (cur != NULL)
+	{
+		if (cur->data == key)
+		{
+			return cur;
+		}
+		cur = cur->next;
+	}
+	return NULL;
+}
+void SListInsertAfter(SListNode* pos, SListDataType x)//在pos位置之后插入X
+{
+	assert(pos);
+	SListNode* newNode=BuySListNode(x);
+	newNode->next = pos->next;
+	pos->next = newNode;
+}
+void SListEraseAfter(SListNode* pos)//删除pos位置之后的一个元素
+{
+	assert(pos);
+	if (pos->next)
+	{
+		SListNode* next = pos->next;
+		SListNode* nextnext = next->next;
+		pos->next = nextnext;
+		free(next);
+	}
+}
 

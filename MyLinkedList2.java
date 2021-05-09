@@ -126,9 +126,82 @@ public class MyLinkedList2 {
             cur=cur.next;
         }
     }
+    public void display2(LastNode newHead) {
+        LastNode cur=newHead;
+        while (cur!=null) {
+            System.out.print(cur.date+" ");
+            cur=cur.next;
+        }
+    }
     //清空链表
     public void clear() {
         this.head=null;
     }
-    public LastNode 
+    //反转链表
+    public LastNode reverseList() {
+        LastNode prev=null;
+        LastNode cur=this.head;
+        if(this.head.next==null) {
+            return this.head;
+        } else {
+            while (cur!=null) {
+                LastNode curNest=cur.next;
+                cur.next=prev;
+                prev=cur;
+                cur=curNest;
+            }
+        }
+        return prev;
+    }
+    //链表中间节点
+    public LastNode middleNode() {
+        LastNode fast=this.head;
+        LastNode slow=this.head;
+        while (fast!=null&&fast.next!=null) {
+            fast=fast.next.next;
+            slow=slow.next;
+        }
+            return slow;
+    }
+    //链表倒数第K个节点
+    public LastNode FindKthToTail(int k) {
+        if(k<0||head==null) {
+            return null;
+        }
+        LastNode fast=this.head;
+        LastNode slow=this.head;
+        while (k-1!=0) {
+            if(fast!=null) {
+                fast=fast.next;
+                k--;
+            } else {
+                return null;
+            }
+        }
+        while (fast!=null&&fast.next!=null) {
+            fast=fast.next;
+            slow=slow.next;
+        }
+        return slow;
+    }
+    //删除链表重复节点
+    public LastNode deleteDuplication() {
+        LastNode cur=this.head;
+        LastNode newHead=new LastNode(0);
+        LastNode tmp=newHead;
+        while (cur!=null) {
+            if(cur.next!=null&&cur.date==cur.next.date) {
+                while (cur.next!=null&&cur.date==cur.next.date) {
+                      cur=cur.next;
+                }
+                cur=cur.next;
+            } else {
+                tmp.next=cur;
+                tmp=tmp.next;
+                cur=cur.next;
+            }
+            tmp.next=null;
+        }
+        return newHead.next;
+    }
 }

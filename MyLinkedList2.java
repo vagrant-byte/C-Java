@@ -204,4 +204,69 @@ public class MyLinkedList2 {
         }
         return newHead.next;
     }
+    //分割链表
+    public LastNode partition(int x) {
+        LastNode bs=null;
+        LastNode be=null;
+        LastNode as=null;
+        LastNode ae=null;
+        while (this.head!=null) {
+            if(head.date<x) {
+                //第一次插入
+                if(bs==null) {
+                    bs=head;
+                    be=head;
+                } else {
+                    be.next=head;
+                    be=be.next;
+                }
+            } else {
+                if(as==null) {
+                    as=head;
+                    ae=head;
+                } else {
+                    ae.next=head;
+                    ae=ae.next;
+                }
+            }
+            head=head.next;
+        }
+        if(bs==null) {
+            return as;
+        }
+        be.next=as;
+        if(as!=null) {
+            ae.next=null;
+        }
+        return bs;
+    }
+    //回文结构
+    public boolean chkPalindrome() {
+        LastNode fast=this.head;
+        LastNode slow=this.head;
+        //找中间节点
+        while (fast!=null&&fast.next!=null) {
+            fast=fast.next.next;
+            slow=slow.next;
+        }
+        //反转
+        LastNode cur=slow.next;
+        while (cur!=null) {
+            LastNode curNext=cur.next;
+            cur.next=slow;
+            slow=cur;
+            cur=curNext;
+        }
+        while (head!=slow) {
+           if(head.date!=slow.date) {
+               return false;
+           }
+           if(head.next==slow) {
+               return true;
+           }
+           head=head.next;
+           slow=slow.next;
+        }
+        return true;
+    }
 }

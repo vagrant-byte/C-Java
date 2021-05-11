@@ -269,4 +269,46 @@ public class MyLinkedList2 {
         }
         return true;
     }
+    public void createLoop() {
+        LastNode cur=this.head;
+        while (cur.next!=null) {
+            cur=cur.next;
+        }
+        cur.next=head.next.next;
+    }
+    //环形链表
+    public boolean hasCycle() {
+        LastNode fast=this.head;
+        LastNode slow=this.head;
+        while (fast!=null&&fast.next!=null) {
+            fast=fast.next.next;
+            slow=slow.next;
+            if(fast==slow) {
+                return true;
+            }
+        }
+        return false;
+    }
+    //环形链表 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+    public LastNode detectCycle()
+    {
+        LastNode fast=this.head;
+        LastNode slow=this.head;
+        while (fast!=null&&fast.next!=null) {
+            fast=fast.next.next;
+            slow=slow.next;
+            if(fast==slow) {
+                break;
+            }
+        }
+        if(fast==null||fast.next==null) {
+            return null;
+        }
+        slow=this.head;
+        while (fast!=slow) {
+            fast=fast.next;
+            slow=slow.next;
+        }
+        return fast;
+    }
 }

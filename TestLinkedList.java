@@ -78,11 +78,56 @@ public class TestLinkedList {
         }
         //删除第一次出现关键字为key的节点
         public void remove(int key) {
+                ListNode cur=this.head;
+                while (cur!=null) {
+                        if(cur.val==key) {
+                                if(cur==this.head) {
+                                        this.head=this.head.next;
+                                        this.head.prev=null;
+                                } else {
+                                        if(cur.next!=null) {
+                                                cur.next.prev=cur.prev;
+                                                cur.prev.next=cur.next;
+                                        } else {
+                                                cur.prev.next=cur.next;
+                                                tail=cur.prev;
+                                        }
+                                }
+                                return;
+                        } else {
+                                cur=cur.next;
+                        }
+                }
 
         }
         //删除所有值为key的节点
         public void removeAllKey(int key) {
+                ListNode cur=this.head;
+                while (cur!=null) {
+                        if(cur.val==key) {
+                                //删除位置是头
+                                if(cur==this.head) {
+                                        this.head=this.head.next;
+                                        if(this.head!=null) {
+                                                this.head.prev=null;
+                                        } else {
+                                                this.tail=null;
+                                        }
 
+                                } else {
+                                        if(cur.next!=null) {
+                                                cur.next.prev=cur.prev;
+                                                cur.prev.next=cur.next;
+                                        } else {
+                                                cur.prev.next=cur.next;
+                                                this.tail=cur.prev;
+                                        }
+                                }
+                                cur=cur.next;
+                        } else {
+                                cur=cur.next;
+                        }
+                }
         }
         //得到单链表的长度
         public int size() {
@@ -104,6 +149,14 @@ public class TestLinkedList {
                 System.out.println();
         }
         public void clear() {
-
+                ListNode cur=this.head;
+                while (cur!=null) {
+                        ListNode curNext=cur.next;
+                        cur.next=null;
+                        cur.prev=null;
+                        cur=curNext;
+                }
+                this.tail=null;
+                this.head=null;
         }
 }

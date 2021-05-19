@@ -311,4 +311,14 @@ public class MyLinkedList2 {
         }
         return fast;
     }
+    //二进制链表转整数
+    public int getDecimalValue() {
+        LastNode cur=this.head;
+        int ans=0;
+        while (cur!=null) {
+            ans=ans*2+cur.date;
+            cur=cur.next;
+        }
+        return ans;
+    }
 }

@@ -1,3 +1,6 @@
+import AnimalClass.Animal;
+
+import java.util.concurrent.Callable;
 
 class Cat extends AnimalClass.Animal implements IRunning {
     public Cat(String name) {
@@ -61,7 +64,14 @@ public class Test6 {
         funcFly(new Dick("豆豆"));
     }
 
-    public static void main(String[] args) {
+    public static void main3(String[] args) {
         funcSwim(new Dick("青青"));
+    }
+
+    public static void main(String[] args) {
+        Animal animal1=new Animal("豆豆");
+        animal1.eat();
+        Animal animal2=new Cat("扁扁");
+        animal2.eat();
     }
 }

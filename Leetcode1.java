@@ -1,3 +1,58 @@
+//调整数组顺序使奇数位于偶数前面
+//while for 循环   if 判断
+class Solution6 {
+    public int[] exchange(int[] nums) {
+        int left=0;
+        int right=nums.length-1;
+        while (left<right) {
+            while (left<right&&nums[left]%2!=0) {
+                left++;
+            }
+            while (left<right&&nums[right]%2==0) {
+                right--;
+            }
+            if(left<right) {
+                int tmp=nums[left];
+                nums[left]=nums[right];
+                nums[right]=tmp;
+                left++;
+                right--;
+            }
+        }
+        return nums;
+    }
+}
+//速算机器人
+class Solution5 {
+    public int calculate(String s) {
+        int x=1;
+        int y=0;
+        for (int i = 0; i <s.length() ; i++) {
+            char ch=s.charAt(i);
+            if(ch=='A') {
+                x=x*2+y;
+            } else {
+                y=x+2*y;
+            }
+        }
+        return x+y;
+    }
+}
+//青蛙跳台阶
+class Solution4 {
+    public int numWays(int n) {
+        if(n<2) {
+            return 1;
+        }
+        int [] num=new int[n+1];
+        num[0]=1;
+        num[1]=1;
+        for(int i=2;i<=n;i++) {
+            num[i]=(num[i-1]+num[i-2])%1000000007;
+        }
+        return num[n];
+    }
+}
 //模拟实现strStr
 class Solution3 {
     public int strStr(String haystack, String needle) {

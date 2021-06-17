@@ -1,3 +1,65 @@
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Stack;
+//重复数字
+class Solution8 {
+    public int findRepeatNumber(int[] nums) {
+  //创建一个新数组存放数据
+        int[] arr=new int[nums.length];
+        for (int i = 0; i <nums.length ; i++) {
+            //这个数字多次出现就++
+            int num=arr[nums[i]]++;
+            if(num>1) {
+                return nums[i];
+            }
+        }
+        return -1;
+    }
+}
+//最小的k个数
+class Solution7 {
+    public int[] getLeastNumbers(int[] arr, int k) {
+        for (int i = 0; i <arr.length-1 ; i++) {
+            for (int j = 0; j<arr.length-1-i  ; j++) {
+                if(arr[j]>arr[j+1]) {
+                    int tmp=arr[j+1];
+                    arr[j+1]=arr[j];
+                    arr[j]=tmp;
+                }
+            }
+        }
+        int[] a=new int[k];
+        for (int i = 0; i <k ; i++) {
+            a[i]=arr[i];
+        }
+        return a;
+    }
+}
+//两个栈实现队列
+class CQueue {
+    Stack<Integer> stack1=new Stack<>();
+    Stack<Integer> stack2=new Stack<>();
+    public CQueue() {
+
+    }
+
+    public void appendTail(int value) {
+        stack1.push(value);
+    }
+
+    public int deleteHead() {
+        if (stack1.empty() && stack2.empty()) {
+            return -1;
+        }
+        if(stack2.empty()) {
+            while (!stack1.empty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+        return stack2.pop();
+
+    }
+}
 //调整数组顺序使奇数位于偶数前面
 //while for 循环   if 判断
 class Solution6 {
@@ -127,7 +189,19 @@ public class Leetcode1 {
         return slow+1;
 
     }
+    //冒泡排序
     public static void main(String[] args) {
+        int[] arr={3,2,5,7,2,1};
+        for (int i = 0; i <arr.length-1; i++) {
+            for (int j = 0; j<arr.length-1-i ; j++) {
+                if(arr[j]>arr[j+1]) {
+                    int tmp=arr[j+1];
+                    arr[j+1]=arr[j];
+                    arr[j]=tmp;
+                }
+            }
+        }
+        System.out.println(Arrays.toString(arr));
 
     }
 }

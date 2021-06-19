@@ -1,6 +1,116 @@
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
+//数组中超过一半的数字
+class Solution14 {
+    public int majorityElement(int[] nums) {
+        int count=0;
+        int card=0;//出现次数最多的数字
+        for (int i = 0; i <nums.length ; i++) {
+            if(count==0) {
+                card=nums[i];
+            }
+            if(card==nums[i]) {
+                count++;
+            } else {
+                count--;
+            }
+        }
+        return card;
+
+    }
+}
+//旋转数组最小数
+class Solution13 {
+    //二分查找
+    public int minArray(int[] numbers) {
+        int low=0;
+        int high=numbers.length-1;
+        while (low<high) {
+            int mid=low+(high-low)/2;
+            if(numbers[mid]>numbers[high]) {
+                low=mid+1;
+            }else if(numbers[mid]<numbers[high]) {
+                high=mid;
+            } else {
+                high-=1;
+            }
+        }
+        return numbers[low];
+    }
+        /*for (int i = 0; i <numbers.length-1 ; i++) {
+            for (int j = 0; j <numbers.length-1-i ; j++) {
+                if(numbers[j]>numbers[j+1]) {
+                    int tmp=numbers[j];
+                    numbers[j]=numbers[j+1];
+                    numbers[j+1]=tmp;
+                }
+            }
+        }
+        return numbers[0];
+    }*/
+
+}
+//替换空格
+class Solution12 {
+    public String replaceSpace(String s) {
+        StringBuffer s1=new StringBuffer();
+        char ch[]=s.toCharArray();
+        for (int i = 0; i <s.length() ; i++) {
+            if(ch[i]!=' ') {
+                s1.append(ch[i]);
+            } else {
+                s1.append("%20");
+            }
+        }
+        return s1.toString();
+    }
+}
+//第一次只出现一次的字符
+class Solution11 {
+    public char firstUniqChar(String s) {
+        char ch[]=s.toCharArray();
+        int res[]=new int[26];
+        for (int i = 0; i <s.length() ; i++) {
+            res[ch[i]-'a']++;
+        }
+        for(int i=0;i<s.length();i++) {
+            if(res[ch[i]-'a']==1) {
+                return ch[i];
+            }
+        }
+        return ' ';
+
+    }
+}
+//缺失的数字
+class Solution10 {
+    public int missingNumber(int[] nums) {
+        int num=nums.length;
+        for (int i = 0; i <nums.length ; i++) {
+            if(nums[i]!=i) {
+                return i;
+            }
+        }
+        return num;
+    }
+}
+//反转字符串
+class Solution9 {
+    public String reverseWords(String s) {
+        s=s.trim();//删除头尾空格
+        String[] ss=s.split(" ");//空格分隔
+        StringBuilder a=new StringBuilder();
+        for(int i=ss.length-1;i>=0;i--) {//反向添加
+            if(!ss[i].equals("")) {
+                a.append(ss[i].trim());
+                a.append(" ");
+            }
+        }
+        return a.toString().trim();
+    }
+}
 //重复数字
 class Solution8 {
     public int findRepeatNumber(int[] nums) {

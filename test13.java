@@ -157,5 +157,35 @@ class Solution13 {
     }*/
 
 }
-public class test13 {
+class Solution11 {
+    public int search(int[] nums, int target) {
+        //二分查找
+        int left=0;
+        int right=nums.length-1;
+        int count=0;
+        while (left<right) {
+            int mid=left+(right-left)/2;
+            if(nums[mid]<=target) {
+                left=mid;
+              } else if(nums[mid]>target) {
+                right=mid-1;
+            }
+        }
+        while (left<nums.length&&nums[left++]==target) {
+            count++;
+        }
+        return count;
+    }
+        /* count=0;
+        for (int i = 0; i <nums.length ; i++) {
+            if(nums[i]==target) {
+                count++;
+            }
+        }
+        return count;
+    }*/
 }
+public class test13 {
+
+}
+

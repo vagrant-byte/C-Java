@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class TreeNode {
     public char val;
     public TreeNode left;
@@ -30,6 +33,7 @@ public class Traversal {
     }
     // 前序遍历
     void preOrderTraversal(TreeNode root){
+        List<Integer> list=new ArrayList<>();
         if (root==null) {
             return;
         }
@@ -73,6 +77,41 @@ public class Traversal {
         }
         return getSize2(root.right)+getSize2(root.left)+1;
     }
+    //求叶子节点数
+    int getLeafSize(TreeNode root) {
+        if(root==null) {
+            return 0;
+        }
+        if(root.left==null&&root.right==null) {
+            return 1;
+        }
+        return getLeafSize(root.left)+getLeafSize(root.right);
+
+    }
+//第K层节点数
+    int getLevelSize(TreeNode root,int k) {
+        if(root==null||k<1) {
+            return 0;
+        }
+        if(k==1) {
+            return 1;
+        }
+        return getLevelSize(root.left,k-1)+getLevelSize(root.right,k-1);
+    }
+    //查找val值所在的节点
+    TreeNode find(TreeNode root, char val) {
+        if(root==null) {
+            return null;
+        }
+        if(root.val==val) {
+            return root;
+        }
+        TreeNode result=find(root.left,val);
+        if(result!=null) {
+            return result;
+        }
+        return find(root.right,val);
+    }
 
     public static void main(String[] args) {
         Traversal traversal=new Traversal();
@@ -84,6 +123,10 @@ public class Traversal {
         traversal.postOrderTraversal(root);
         System.out.println();
         System.out.println(traversal.getSize2(root));
+        int r=traversal.getLeafSize(root);
+        System.out.println(r);
+        int a=traversal.getLevelSize(root,4);
+        System.out.println(a);
 
     }
 }

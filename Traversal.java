@@ -112,7 +112,37 @@ public class Traversal {
         }
         return find(root.right,val);
     }
+    //相同的树
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        //p q都为null
+        //p null q!=null 或 p!=null q=null
+        //p q 都不为null
+        if(p==null&&q==null) {
+            return true;
+        }
+        if(p==null||q==null) {
+            return false;
+        }
+        if(p.val!=q.val) {
+            return false;
+        }
+        return isSameTree(p.left,q.left)&&isSameTree(p.right,q.right);
 
+    }
+    //另一个树子树
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        if(root==null&&subRoot==null) {
+            return true;
+        }
+        if(root==null||subRoot==null) {
+            return false;
+        }
+        boolean ret=false;
+        if(root.val==subRoot.val) {
+            ret=isSameTree(root,subRoot);
+        }
+        return ret||isSubtree(root.left,subRoot)||isSubtree(root.right,subRoot);
+    }
     public static void main(String[] args) {
         Traversal traversal=new Traversal();
         TreeNode root=traversal.createTree();

@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 class TreeNode {
     public char val;
@@ -193,6 +195,23 @@ public class Traversal {
         }
         return isMirror(t1.left,t2.right)&&isMirror(t1.right,t2.left);
     }
+    //层序遍历  用队列进行存储  分别将左右子树入队，然后依次出队
+    void levelOrderTraversal(TreeNode root) {
+        Queue<TreeNode> queue=new LinkedList<>();
+        queue.offer(root);//存放树的根节点
+        while (!queue.isEmpty()) {
+            TreeNode cur=queue.poll();//根节点出队
+            System.out.print(cur.val+" ");
+            if(cur.left!=null) {
+                //左子树入队
+                queue.offer(cur.left);
+            }
+            if(cur.right!=null) {
+                //右子树入队
+                queue.offer(cur.right);
+            }
+        }
+    }
 
     public static void main(String[] args) {
         Traversal traversal=new Traversal();
@@ -208,6 +227,7 @@ public class Traversal {
         System.out.println(r);
         int a=traversal.getLevelSize(root,4);
         System.out.println(a);
+        traversal.levelOrderTraversal(root);
 
     }
 }

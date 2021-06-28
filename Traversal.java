@@ -158,6 +158,27 @@ public class Traversal {
         return 1+(leftDepth>rightDepth?leftDepth:rightDepth);
 
     }
+    //最小深度
+    public int minDepth(TreeNode root) {
+        if(root==null) {
+            return 0;
+        }
+        if(root.left==null&&root.right==null) {
+            return 1;
+        }
+        int leftDepth=minDepth(root.left);
+        int rightDepth=minDepth(root.right);
+        //左子树为空 为右子树深度加一
+        if(leftDepth==0) {
+            return rightDepth+1;
+        }
+        //右子树为空  为左子树深度加一
+        if(rightDepth==0) {
+            return leftDepth+1;
+        }
+        //左右子树都不为空，左右子树中最小深度加一
+        return 1+(rightDepth>leftDepth?leftDepth:rightDepth);
+    }
     //平衡二叉树
     public boolean isBalanced(TreeNode root) {
         if(root==null) {

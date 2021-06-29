@@ -185,7 +185,81 @@ class Solution11 {
         return count;
     }*/
 }
-public class test13 {
+//提莫攻击
+class Solution3 {
+    public int findPoisonedDuration(int[] timeSeries, int duration) {
+        int sum=0;
+        for(int i=1;i<timeSeries.length;i++) {
+            if(timeSeries[i]-timeSeries[i-1]>=duration) {
+                sum=sum+duration;
+            } else {
+                sum+=timeSeries[i]-timeSeries[i-1];
+            }
+        }
+        return sum+duration;
+    }
+}
+//插入位置搜素
+class Solution4 {
+    public int searchInsert(int[] nums, int target) {
+        for(int i=0;i<nums.length;i++) {
+            if(nums[i]>=target) {
+                return i;
+            }
+        }
+        return nums.length;
 
+    }
+}
+//加一
+class Solution5 {
+    public int[] plusOne(int[] digits) {
+        for (int i = digits.length - 1; i >= 0; i--) {
+            if (digits[i] == 9) {
+                digits[i] = 0;
+            } else {
+                digits[i] = digits[i] + 1;
+                break;
+            }
+        }
+        int[] ret = new int[digits.length + 1];
+        if (digits[0] == 0) {
+            ret[0] = 1;
+        } else return digits;
+        return ret;
+    }
+}
+//合并两个有序数组
+class Solution12 {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int k=m+n-1;
+        int i=m-1;
+        int j=n-1;
+        while (i>=0&&j>=0) {
+            nums1[k--]=nums1[i]>nums2[j]?nums1[i--]:nums2[j--];
+        }
+        while (j>=0) {
+            nums1[k--]=nums2[j--];
+        }
+
+    }
+}
+public class test13 {
+    //最大子序和
+    public int maxSubArray(int[] nums) {
+        int res=nums[0];
+        int sum=0;
+        for (int i = 0; i <nums.length ; i++) {
+            if(sum>0) {
+                sum+=nums[i];
+            }
+            else {
+                sum=nums[i];
+            }
+            res=sum>res?sum:res;
+        }
+        return res;
+    }
+   
 }
 

@@ -260,6 +260,30 @@ public class test13 {
         }
         return res;
     }
-   
+    //只出现一次的数字 其他数字出现两次
+    public static int singleNumber(int[] nums) {
+        int tmp=0;
+        for (int i = 0; i <nums.length ; i++) {
+            tmp=tmp^nums[i];
+        }
+        return tmp;
+    }
+    //只出现一次的数字  其他数字出现3次 x & ~x = 0;
+    //x & ~0 = x;
+    public static int singleNumber1(int[] nums) {
+        int a=0;
+        int b=0;
+        for (int i = 0; i <nums.length ; i++) {
+            a=(a^nums[i])&~b;
+            b=(b^nums[i])&~a;
+        }
+        return a;
+
+    }
+
+    public static void main(String[] args) {
+        int[] num={1,1,4,1};
+        System.out.println(singleNumber1(num));
+    }
 }
 

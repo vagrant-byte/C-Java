@@ -1,26 +1,21 @@
-package book;
+package jdbc;
 
+import java.sql.PreparedStatement;
+//书籍信息
 public class Book {
+    private int bookid;
     private String name;
     private String author;
-    private double price;
+    private int price;
     private String type;
-    private boolean isBorrowed;
+    private  boolean isBorrow;
 
-
-    public Book(String name, String author, double price, String type) {
-        this.name = name;
-        this.author = author;
-        this.price = price;
-        this.type = type;
+    public int getBookid() {
+        return bookid;
     }
 
-    public boolean isBorrowed() {
-        return isBorrowed;
-    }
-
-    public void setBorrowed(boolean borrowed) {
-        isBorrowed = borrowed;
+    public void setBookid(int bookid) {
+        this.bookid = bookid;
     }
 
     public String getName() {
@@ -39,11 +34,11 @@ public class Book {
         this.author = author;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
@@ -55,14 +50,23 @@ public class Book {
         this.type = type;
     }
 
+    public boolean isBorrow() {
+        return isBorrow;
+    }
+
+    public void setBorrow(boolean borrow) {
+        isBorrow = borrow;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
-                "name='" + name + '\'' +
+                "bookid=" + bookid +
+                ", name='" + name + '\'' +
                 ", author='" + author + '\'' +
                 ", price=" + price +
                 ", type='" + type + '\'' +
-                ((isBorrowed==true)?"已借出":"未借出") +
+                ", isBorrow=" + isBorrow +
                 '}';
     }
 }

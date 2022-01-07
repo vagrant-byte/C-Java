@@ -1,6 +1,576 @@
+import com.sun.javafx.image.impl.BaseByteToIntConverter;
+
+import java.io.CharArrayWriter;
 import java.util.*;
  class ListNode {
+     //括号的最大镶嵌程度
+     public int maxDepth(String s) {
+         int count=0;
+         int max=0;
+         for(int i=0;i<s.length();i++) {
+             if(s.charAt(i)=='(') {
+                 count++;
+                 max=max>count? max:count;
+             } else if(s.charAt(i)==')') {
+                 count--;
+             }
+         }
+         return max;
+     }
+     //简化路径
+     public  static String simplifyPath(String path) {
+         // ../返回上一级目录
+         // ./ 当前的目录
+         //  //视为一个/
+         //  /  在结尾
+         //将字符串以/分割，遍历字符串正常文件名入栈，如果是“..”弹出栈顶元素，如果是‘.’不管。最后
+         //在遍历栈，将出栈元素插入到返回字符串的头上同时加上‘/’
+         String[] strings=path.split("/");
+         Stack<String> stack=new Stack<>();
+         for (String s:strings) {
+             if(s.equals("..")&&!stack.isEmpty()) {
+                 stack.pop();
+             }
+             if (!s.equals(".")&&!s.equals("..")&&!s.equals("")) {
+                 stack.push(s);
+             }
+         }
+         StringBuilder stringBuilder=new StringBuilder();
+         while (!stack.isEmpty()) {
+             stringBuilder.insert(0,stack.pop());
+             stringBuilder.insert(0,"/");
+         }
+         if(stringBuilder.length()==0) {
+             stringBuilder.append("/");
+         }
+         return stringBuilder.toString();
+
+     }
+
+     public static void main(String[] args) {
+         String s="/home/";
+         simplifyPath(s);
+     }
+     //替换所有的问号
+     public String modifyString1(String s) {
+         char[] arr=s.toCharArray();
+         for (int i = 0; i <arr.length ; i++) {
+             if(arr[i]=='?') {
+                 for (char j = 'a'; j <='c' ; j++) {
+                     if((i>0&&arr[i-1]==j)||(i<arr.length-1&&arr[i+1]==j)) {
+                         continue;
+                     }
+                     arr[i]=j;
+                 }
+             }
+         }
+         return new String(arr);
+     }
+     public String modifyString(String s) {
+         char[] chars=new char[]{'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t'
+                 ,'u','v','w','x','y','z'};
+         Set<Character> set=new HashSet<>();
+         for (int i = 0; i <chars.length ; i++) {
+             set.add(chars[i]);
+         }
+         for(int i=0;i<s.length();i++) {
+             if(s.charAt(i)!='?') {
+                 set.remove(s.charAt(i));
+             }
+         }
+         String s1=set.toString();
+         char[] list=s1.toCharArray();
+         char[] chars1=s.toCharArray();
+         for(int i=0;i<chars.length;i++) {
+             if (chars[i] == '?') {
+                 chars[i] = list[i];
+             }
+         }
+         return new String(chars);
+
+     }
+     //一周中的第几天
+     public String dayOfTheWeek(int day, int month, int year) {
+         int days=4;
+         String[] weeks={"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+         int[] months={31,28,31,30,31,30,31,31,30,31,30,31};
+         for (int i = 1971; i <year ; i++) {
+             boolean isLeap=(i%4==0&&i%100!=0)||i%400==0;
+             days+=isLeap?366:365;
+         }
+         for (int i = 0; i <month-1 ; i++) {
+             days+=months[i];
+             if(i==2&&((year%4==0&&year%100!=0)||year%400==0)) {
+                 days+=1;
+             }
+         }
+         days+=day;
+         return weeks[days%7];
+
+     }
+     //消除游戏
+     public int lastRemaining(int n) {
+         if(n==1) {
+             return 1;
+         }
+         return 2*(n/2+1-lastRemaining(n/2));
+
+     }
+     //将一维数组转变成二维数组
+     public int[][] construct2DArray(int[] original, int m, int n) {
+         int[][] res=new int[m][n];
+         if(m*n!=original.length) {
+             return new int[][]{};
+         }
+         int count=0;
+         for (int i = 0; i <m ; i++) {
+             for (int j = 0; j <n ; j++) {
+                 if(count<original.length) {
+                     res[i][j]=original[count];
+                     count++;
+                 }
+             }
+         }
+         return res;
+     }
+     //完美数
+     public boolean checkPerfectNumber(int num) {
+         int sum=0;
+         for(int i=1;i<num;i++) {
+             if(num%i==0) {
+                 sum+=i;
+             }
+             if(sum>num) {
+                 return false;
+             }
+         }
+         return num==sum;
+     }
+     //一手顺子
+     public boolean isNStraightHand(int[] hand, int groupSize) {
+         if(hand.length%groupSize!=0) {
+             return false;
+         }
+         //排序
+         Arrays.sort(hand);
+         //使用hash表存储
+         Map<Integer,Integer> map=new HashMap<>();
+         for (int i = 0; i <hand.length ; i++) {
+             map.put(hand[i],map.getOrDefault(hand[i],0)+1);
+         }
+         for (int i = 0; i <hand.length ; i++) {
+             //这张牌已经用完
+             if(map.get(hand[i])==0) {
+                 continue;
+             }
+             for (int j = 0; j <groupSize ; j++) {
+                 if(!map.containsKey(hand[i]+j)||map.get(hand[i]+j)==0) {
+                     return false;
+                 }
+                 map.put(hand[i]+j,map.get(hand[i]+j)-1);
+             }
+         }
+         return true;
+     }
+     //统计特殊四元组
+     public int countQuadruplets(int[] nums) {
+         int count=0;
+         for (int a = 0; a <nums.length ; a++) {
+             for (int b =a+1 ; b <nums.length ; b++) {
+                 for (int c = b+1; c <nums.length ; c++) {
+                     for (int d = c+1; d <nums.length ; d++) {
+                         if(nums[a]+nums[b]+nums[c]==nums[d]) {
+                             count++;
+                         }
+                     }
+                 }
+             }
+         }
+         return count;
+
+     }
+     //括号匹配问题
+     public boolean chkParenthesis(String A, int n) {
+         // write code here
+         if(n%2!=0) {
+             return false;
+         }
+         Stack<Character> stack=new Stack<>();
+         for (int i = 0; i <n ; i++) {
+             if(A.charAt(i)=='(') {
+                 stack.push('(');
+             } else if(A.charAt(i)==')') {
+                 stack.pop();
+             }
+         }
+         if(stack.isEmpty()) {
+             return true;
+         } else {
+             return false;
+         }
+     }
+     //连接词
+     public static List<String> findAllConcatenatedWordsInADict(String[] words) {
+         List<String> list=new ArrayList<>();
+         if(words.length<=2) {
+             return list;
+         }
+         for (String s:words) {
+             Map<Character,Integer> map=new HashMap<>();
+             for (int i = 0; i <s.length() ; i++) {
+                 if(map.containsKey(s.charAt(i))) {
+                     map.put(s.charAt(i),map.get(s.charAt(i)+1));
+                 }else {
+                     map.put(s.charAt(i),1);
+                 }
+             }
+             String tmp="";
+             for (int i = 0; i <map.size() ; i++) {
+                 if(map.get(i)==2) {
+                     tmp+=map.get(i);
+                 }
+             }
+             if (s.compareTo(tmp)!=-1) {
+                 list.add(s);
+             }
+         }
+         return list;
+     }
+
+     public static void main1(String[] args) {
+         String[] words=new String[]{"cat","cats","catsgogcats","dog","dogcatsdog","hippoptamuses","rat","ratcatdogcat"};
+         System.out.println(findAllConcatenatedWordsInADict(words));
+     }
+     //适龄的朋友
+     public int numFriendRequests(int[] ages) {
+         int left=0;
+         int right=0;
+         int res=0;
+         Arrays.sort(ages);
+         for (int i = 0; i <ages.length ; i++) {
+             if(ages[i]<15) {
+                 continue;
+             }
+             while (ages[left]<=0.5*ages[i]+7) {
+                 left++;
+             }
+             while (right+1<ages.length&&ages[right+1]<=ages[i]) {
+                 right++;
+             }
+             res+=right-left;
+         }
+         return res;
+     }
+     //Bigram分词
+     public String[] findOcurrences(String text, String first, String second) {
+         List<String> list=new ArrayList<>();
+         if(text.length()<=2) {
+             return new String[]{};
+         }
+         String[] tmp=text.split(" ");
+         for (int i = 1; i <tmp.length-1 ; i++) {
+             if(tmp[i-1].equals(first)&&tmp[i].equals(second)) {
+                 list.add(tmp[i+1]);
+             }
+         }
+         return list.toArray(new String[0]);
+     }
+     public static void main16(String[] args) {
+         int [] arr=new int[]{6,-3,-2};
+         int sumMax=0;
+         for (int i = 0; i <arr.length ; i++) {
+             int cur=0;
+             for (int j = i; j <arr.length; j++) {
+                 cur+=arr[j];
+                 if (cur>sumMax) {
+                     sumMax=cur;
+                 }
+             }
+         }
+         System.out.println(sumMax);
+     }
+
+     //吃苹果的最大数目
+     public int eatenApples(int[] apples, int[] days) {
+         int sum=0;
+         int max=days[1];
+         for (int i = 1; i <days.length ; i++) {
+             if(max<days[i]) {
+                 max=days[i];
+             }
+         }
+         for (int i = 0; i <apples.length ; i++) {
+             if(apples[i]<=days[i]&&apples[i]!=0&&days[i]!=0) {
+                 sum+=1;
+             } else if (apples[i]!=0&&days[i]!=0){
+                 sum+=days[i];
+                 if(days[i]==max) {
+                     break;
+                 }
+
+             }
+         }
+         return sum;
+     }
+     //重复叠加字符串匹配
+     public static int repeatedStringMatch1(String a, String b) {
+//         String tmp=a;
+//         int count=1;
+//         int midRepCnt=b.length()/a.length();
+//         while (count<=midRepCnt+2) {
+//             if (tmp.indexOf(b)!=-1) {
+//                 return count;
+//             }
+//             tmp+=a;
+//             count++;
+//         }
+//         return -1;
+         boolean[] arr=new boolean[26];
+         for (int i = 0; i <a.length() ; i++) {
+             arr[a.charAt(i)-'a']=true;
+         }
+         for (int i = 0; i <b.length() ; i++) {
+             if(!arr[b.charAt(i)-'a']) {
+                 return -1;
+             }
+         }
+         StringBuilder stringBuilder=new StringBuilder();
+         int count=b.length()/a.length();
+         for (int i = 0; i <=2 ; i++) {
+             if(a.indexOf(b)>=0) {
+                 return count+i;
+             }
+             stringBuilder.append(a);
+         }
+         return -1;
+     }
+     public static int repeatedStringMatch(String a, String b) {
+         //去除a中重复的字符
+         String res="";
+         LinkedHashSet<String> linkedHashSet=new LinkedHashSet<>();
+         for (int i = 0; i <a.length() ; i++) {
+             linkedHashSet.add(a.charAt(i)+"");
+         }
+         for (String s:linkedHashSet) {
+             res+=s;
+         }
+         //字符串a与b相同
+         if(a==b) {
+             return 1;
+         } else if(a.length()>b.length()) {
+             //a串比b串长，当a串中包含b返回1，否则返回-1
+             if(res.indexOf(b)!=-1&&res.charAt(0)!=b.charAt(0)) {
+                 int count=0;
+                 int num=0;
+                 //判断b的第一个字符在a串中的位置，从而判断a拼接的次数
+                 for (int i = 0; i <a.length() ; i++) {
+                     if(a.charAt(i)==b.charAt(0)) {
+                         num=i;
+                     }
+                 }
+                return b.length()/res.length()+num;
+             } else if(a.indexOf(b)!=-1&&res.charAt(0)==b.charAt(0)) {
+                 return 1;
+             } else {
+                 return -1;
+             }
+         } else {
+             String tmp="";
+             int count=0;
+             int num=0;
+             //判断b的第一个字符在a串中的位置，从而判断a拼接的次数
+             for (int i = 0; i <a.length() ; i++) {
+                 if(a.charAt(i)==b.charAt(0)) {
+                     num=i;
+                 }
+             }
+             if(num!=0&&b.length()%a.length()!=0) {
+                 for (int i = 0; i <b.length()/a.length()+num ; i++) {
+                     tmp+=a;
+                     count++;
+                 }
+             } else if(num!=0&&b.length()%a.length()==0) {
+                 for (int i = 0; i <b.length()/a.length()+num-1 ; i++) {
+                     tmp+=a;
+                     count++;
+                 }
+             } else {
+                 for (int i = 0; i <b.length()/a.length() ; i++) {
+                     tmp+=a;
+                     count++;
+                 }
+             }
+             if(tmp.indexOf(b)!=-1) {
+                 return count;
+             } else {
+                 return -1;
+             }
+         }
+     }
+
+     public static void main15(String[] args) {
+         String a="aaaaaaaaaaaab";
+         String b="ba";
+         System.out.println(repeatedStringMatch(a, b));
+     }
+     //一年中的第几天
+     public static int dayOfYear(String date) {
+         int year= Integer.parseInt(date.substring(0,4));
+         int[] dayOfMonth=new int[]{31,28,31,30,31,30,31,31,30,31,30,31};
+         if((year%400==0)||(year%4==0&&year%100!=0)) {
+             dayOfMonth[1]=29;
+         }
+         System.out.println(year);
+         int month=Integer.parseInt(date.substring(5,7));
+         System.out.println(month);
+         int day=Integer.parseInt(date.substring(8,10));
+         System.out.println(day);
+         System.out.println(dayOfMonth[1]);
+         int res=0;
+         for (int i = 0; i <month-1 ; i++) {
+             res+=dayOfMonth[i];
+             System.out.println(res);
+         }
+         return res+day;
+     }
+
+     public static void main13(String[] args) {
+         String s="2008-10-10";
+         System.out.println(dayOfYear(s));
+     }
+     //供暖器
+//     public int findRadius(int[] houses, int[] heaters) {
+//         Arrays.sort(houses);
+//         Arrays.sort(heaters);
+//         int left=0;
+//         int right=Math.max(houses[houses.length-1],heaters[heaters.length-1]);
+//         while (left<right) {
+//             int mid=(left+right)/2;
+//             if(check(houses,heaters,mid)) {
+//                 right=mid;
+//             } else {
+//                 left=mid+1;
+//             }
+//         }
+//         return right;
+//     }
+//
+//     private boolean check(int[] houses, int[] heaters, int mid) {
+//         for (int i = 0,j=0; i <houses.length ; i++) {
+//             //
+//             while (j<heaters.length&&heaters[j]+mid<houses[i]) {
+//                 j++;
+//             }
+//             if(j<heaters.length&&heaters[j]-mid<=houses[i]&&houses[i]<=heaters[j]+mid) {
+//                 return false;
+//             }
+//         }
+//         return true;
+//     }
+
+     //删除公共字符
+     public static void main12(String[] args) {
+         Scanner scanner=new Scanner(System.in);
+         String str1=scanner.nextLine();
+         String str2=scanner.nextLine();
+         StringBuilder stringBuilder=new StringBuilder();
+         for (int i = 0; i <str1.length() ; i++) {
+             if(!str2.contains(str1.charAt(i)+"")) {
+                 stringBuilder.append(str1.charAt(i));
+             }
+         }
+         System.out.println(stringBuilder.toString());
+//         Scanner scanner=new Scanner(System.in);
+//         String str1=scanner.nextLine();
+//         String str2=scanner.nextLine();
+//         HashMap<Character,Integer> map=new HashMap<>();
+//         //遍历第二个字符串
+//         for (int i = 0; i <str2.length() ; i++) {
+//             //判断当前的字符之前是否存在
+//             if(map.get(str2.charAt(i))==null) {
+//                 map.put(str2.charAt(i),1);
+//             } else {
+//                 map.put(str2.charAt(i),map.get(str2.charAt(i))+1);
+//             }
+//         }
+//         String ret="";
+//         //遍历第一个字符串
+//         for (int i = 0; i <str1.length() ; i++) {
+//             if(map.get(str1.charAt(i))==null) {
+//                 ret+=str1.charAt(i);
+//             }
+//         }
+//         System.out.println(ret);
+
+//         Scanner scanner=new Scanner(System.in);
+//         String str1=scanner.nextLine();
+//         String str2=scanner.nextLine();
+//         int[] hashtable=new int[256];
+//         for (int i = 0; i <str2.length() ; i++) {
+//             hashtable[str2.charAt(i)]++;
+//         }
+//         StringBuilder stringBuilder=new StringBuilder();
+//         for (int i = 0; i <str1.length() ; i++) {
+//             if(hashtable[str1.charAt(i)]==0) {
+//                 stringBuilder.append(str1.charAt(i));
+//             }
+//         }
+//         System.out.println(stringBuilder.toString());
+
+     }
+     //数组中的第k大数字
+     public int findKthLargest(int[] nums, int k) {
+         Arrays.sort(nums);
+         int i=nums.length-k;
+         return nums[i];
+
+
+     }
+     //甲板上的战舰
+     public int countBattleships(char[][] board) {
+         int ans=0;
+         for (int i = 0; i <board.length ; i++) {
+             for (int j = 0; j <board[0].length ; j++) {
+                 if(board[i][j]=='.') continue;
+                 if(i>0&&board[i-1][j]=='X') continue;
+                 if(j>0&&board[i][j-1]=='X') continue;
+                 ans++;
+             }
+         }
+         return ans;
+
+     }
+     //小镇法官
+     public int findJudge(int n, int[][] trust) {
+         int[] inTrust=new int[n+1];
+         int[] outTrust=new int[n+1];
+         for (int[] a:trust) {
+             int x=a[0];
+             int y=a[1];
+             inTrust[y]++;
+             outTrust[x]++;
+         }
+         for (int i = 1; i <=n ; i++) {
+             if(inTrust[i]==n-1&&outTrust[i]==0) {
+                 return i;
+             }
+         }
+         return -1;
+     }
      //换酒问题
+     public int numWaterBottles1(int n, int m) {
+         int ans=n;
+         while (n>=m) {
+             //可以换几瓶酒
+             int a=n/m;
+             //剩下的没有换完的酒
+             int b=n%m;
+             ans+=a;
+             //换酒后的空瓶加剩下的不能换酒的空瓶
+             n=a+b;
+         }
+         return ans;
+     }
      public static int numWaterBottles(int numBottles, int numExchange) {
          int ans=0;
          int wine=numBottles;
@@ -12,7 +582,9 @@ import java.util.*;
          ans+=wine;
          return ans;
      }
-     public static void main(String[] args) {
+     public static void main11(String[] args) {
+         Scanner scanner=new Scanner(System.in);
+         int n=scanner.nextInt();
          System.out.println(numWaterBottles(17, 3));
      }
      //盛最多水的容器
